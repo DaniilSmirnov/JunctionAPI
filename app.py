@@ -17,9 +17,18 @@ cnx = mysql.connector.connect(user='root', password='i130813',
                                   database='junction')
 
 
-class TestConnection(Resource):
+class GetCelebrations(Resource):
     def get(self):
-        return {'status': 'success'}
+        cursor = cnx.cursor()
+
+        query = "select name from celebrations where curdate() >= start and curdate() <= finish;"
+        cursor.execute(query)
+        response = []
+        for item in cursor:
+            for value in item:
+                response.append(value)
+
+        return response
 
 
 class GetWishlists(Resource):
@@ -194,7 +203,7 @@ class WillBePayed(Resource):
             return {'status': str(e)}
 
 
-api.add_resource(TestConnection, '/TestConnection')
+api.add_resource(GetCelebrations, '/GetCelebrations')
 api.add_resource(GetWishlists, '/GetWishlists')
 api.add_resource(AddWishlist, '/AddWishlist')
 api.add_resource(AddProduct, '/AddProduct')
