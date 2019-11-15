@@ -20,17 +20,19 @@ cnx = mysql.connector.connect(user='root', password='i130813',
 def search(query):
     import csv
     with open('search_index.csv', newline='') as csvfile:
-        spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
-        for row in spamreader:
-            item = ('  '.join(row))
-            item = item.split(',')
-            id = item[0]
-            item = item[1]
-            response = []
-            if item.find(query) != -1:
-                response.append(int(id))
-
-    return response
+        spamreader = csv.reader(csvfile)
+        response = []
+        try:
+            for row in spamreader:
+                try:
+                    id = int(row[0])
+                except ValueError:
+                    continue
+                item = row[1]
+                if item.find(query) != -1:
+                    response.append(id)
+        except UnicodeDecodeError:
+            return response
 
 
 class GetCelebrations(Resource):
