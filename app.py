@@ -248,6 +248,7 @@ class FindPrefered(Resource):
     def post(self):
         pass
 
+
 api.add_resource(GetCelebrations, '/GetCelebrations')
 api.add_resource(GetWishlists, '/GetWishlists')
 api.add_resource(AddWishlist, '/AddWishlist')
