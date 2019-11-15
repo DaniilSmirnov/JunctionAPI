@@ -136,7 +136,7 @@ class AssignCategory(Resource):
             user_id = args['user_id']
             category_id = args['category_id']
 
-            query = "insert into categories values (?, ?);"
+            query = "insert into categories values (?, ?, default );"
             data = (user_id, category_id)
 
             cursor.execute(query, data)
@@ -195,6 +195,47 @@ class WillBePayed(Resource):
             data = (choose, wishlist_id, product_id)
             cursor.execute(query, data)
             cnx.commit()
+
+            cursor.close()
+            return {'status': 'success'}
+        except BaseException as e:
+            cursor.close()
+            return {'status': str(e)}
+
+
+class CheckActuality(Resource):
+    def post(self):
+        cursor = cnx.cursor()
+
+        try:
+            parser = reqparse.RequestParser()
+            parser.add_argument('user_id', type=int)
+            parser.add_argument('category_id', type=int)
+            args = parser.parse_args()
+
+            user_id = args['user_id']
+            category_id = args['category_id']
+
+            query = "update categories set dislikes = dislikes + 1 where iduser = ? and idcategory = ?;"
+            data = (user_id, category_id)
+            cursor.execute(query, data)
+            cnx.commit()
+
+            query = "select dislikes from categories where iduser = ? and idcategory = ?;"
+            data = (user_id, category_id)
+            cursor.execute(query, data)
+            for item in cursor:
+                for value in item:
+                    if int(value) >= 10:
+                        cursor2 = cnx.cursor()
+                        query = "delete idcategories from categories where idcategories = ? and iduser = ?;"
+                        data = (category_id, user_id)
+                        cursor2.execute(query, data)
+                        cnx.commit()
+
+                        cursor.close()
+                        cursor2.close()
+                        return {'status': 'сategory removed'}
 
             cursor.close()
             return {'status': 'success'}
