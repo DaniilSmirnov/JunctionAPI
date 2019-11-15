@@ -140,6 +140,33 @@ class AssignCategory(Resource):
             return {'status': str(e)}
 
 
+class MoveProduct(Resource):
+    def post(self):
+        cursor = cnx.cursor()
+
+        try:
+            parser = reqparse.RequestParser()
+            parser.add_argument('from_id')
+            parser.add_argument('to_id')
+            parser.add_argument('product_id')
+            args = parser.parse_args()
+
+            from_id = args['from_id']
+            to_id = args['to_id']
+            product_id = args['product_id']
+
+            query = "update products set idwishlist = ? where idwishlist = ? and idproduct = ?;"
+            data = (to_id, from_id, product_id)
+            cursor.execute(query, data)
+            cnx.commit()
+
+            cursor.close()
+            return {'status': 'success'}
+        except BaseException as e:
+            cursor.close()
+            return {'status': str(e)}
+
+
 api.add_resource(TestConnection, '/TestConnection')
 api.add_resource(GetWishlists, '/GetWishlists')
 api.add_resource(AddWishlist, '/AddWishlist')
