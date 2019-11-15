@@ -62,12 +62,38 @@ class GetWishlists(Resource):
                 i += 1
 
                 responce.append(wishlist)
-
+        cursor.close()
         return responce
+
+
+class AddWishlist(Resource):
+    def post(self):
+        cursor = cnx.cursor()
+
+        try:
+            parser = reqparse.RequestParser()
+            parser.add_argument('user_id', type=int)
+            parser.add_argument('name', type=str)
+            args = parser.parse_args()
+
+            user_id = args['user_id']
+            name = args['name']
+
+            query = "insert into wishlists values (default, ?, ?);"
+            data = (user_id, name)
+            cursor.execute(query, data)
+            cnx.commit()
+            cursor.close()
+            return {'status': 'success'}
+        except BaseException as e:
+            cursor.close()
+            return {'status': str(e)}
 
 
 api.add_resource(TestConnection, '/TestConnection')
 api.add_resource(GetWishlists, '/GetWishlists')
+api.add_resource(AddWishlist, '/AddWishlist')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
