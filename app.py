@@ -103,7 +103,7 @@ class AddProduct(Resource):
             product_id = args['wishlist_id']
             wishlist_id = args['product_id']
 
-            query = "insert into product values (?, ?);"
+            query = "insert into product values (?, ?, default);"
             data = (product_id, wishlist_id)
             cursor.execute(query, data)
             cnx.commit()
@@ -172,6 +172,7 @@ api.add_resource(GetWishlists, '/GetWishlists')
 api.add_resource(AddWishlist, '/AddWishlist')
 api.add_resource(AddProduct, '/AddProduct')
 api.add_resource(AssignCategory, '/AssignCategory')
+api.add_resource(MoveProduct, '/MoveProduct')
 
 
 if __name__ == '__main__':
