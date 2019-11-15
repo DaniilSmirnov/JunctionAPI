@@ -97,7 +97,7 @@ class AddProduct(Resource):
         try:
             parser = reqparse.RequestParser()
             parser.add_argument('wishlist_id', type=int)
-            parser.add_argument('product_id', type=str)
+            parser.add_argument('product_id', type=int)
             args = parser.parse_args()
 
             product_id = args['wishlist_id']
@@ -120,8 +120,8 @@ class AssignCategory(Resource):
 
         try:
             parser = reqparse.RequestParser()
-            parser.add_argument('user_id')
-            parser.add_argument('category_id')
+            parser.add_argument('user_id', type=int)
+            parser.add_argument('category_id', type=int)
             args = parser.parse_args()
 
             user_id = args['user_id']
@@ -146,9 +146,9 @@ class MoveProduct(Resource):
 
         try:
             parser = reqparse.RequestParser()
-            parser.add_argument('from_id')
-            parser.add_argument('to_id')
-            parser.add_argument('product_id')
+            parser.add_argument('from_id', type=int)
+            parser.add_argument('to_id', type=int)
+            parser.add_argument('product_id', type=int)
             args = parser.parse_args()
 
             from_id = args['from_id']
@@ -167,12 +167,40 @@ class MoveProduct(Resource):
             return {'status': str(e)}
 
 
+class WillBePayed(Resource):
+    def post(self):
+        cursor = cnx.cursor()
+
+        try:
+            parser = reqparse.RequestParser()
+            parser.add_argument('wishlist_id', type=int)
+            parser.add_argument('choose', type=str)
+            parser.add_argument('product_id', type=int)
+            args = parser.parse_args()
+
+            wishlist_id = args['wishlist_id']
+            choose = args['choose']
+            product_id = args['product_id']
+
+            query = "update products set willbe = ? where idwishlist = ? and idproduct = ?;"
+            data = (choose, wishlist_id, product_id)
+            cursor.execute(query, data)
+            cnx.commit()
+
+            cursor.close()
+            return {'status': 'success'}
+        except BaseException as e:
+            cursor.close()
+            return {'status': str(e)}
+
+
 api.add_resource(TestConnection, '/TestConnection')
 api.add_resource(GetWishlists, '/GetWishlists')
 api.add_resource(AddWishlist, '/AddWishlist')
 api.add_resource(AddProduct, '/AddProduct')
 api.add_resource(AssignCategory, '/AssignCategory')
 api.add_resource(MoveProduct, '/MoveProduct')
+api.add_resource(WillBePayed, '/WillBePayed')
 
 
 if __name__ == '__main__':
