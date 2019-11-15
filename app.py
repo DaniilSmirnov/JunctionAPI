@@ -17,6 +17,22 @@ cnx = mysql.connector.connect(user='root', password='i130813',
                                   database='junction')
 
 
+def search(query):
+    import csv
+    with open('search_index.csv', newline='') as csvfile:
+        spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
+        for row in spamreader:
+            item = ('  '.join(row))
+            item = item.split(',')
+            id = item[0]
+            item = item[1]
+            response = []
+            if item.find(query) != -1:
+                response.append(int(id))
+
+    return response
+
+
 class GetCelebrations(Resource):
     def get(self):
         cursor = cnx.cursor()
@@ -245,8 +261,26 @@ class CheckActuality(Resource):
 
 
 class FindPrefered(Resource):
-    def post(self):
-        pass
+    def get(self):
+        cursor = cnx.cursor()
+
+        try:
+            parser = reqparse.RequestParser()
+            parser.add_argument('names', type=list)
+            args = parser.parse_args()
+
+            names = args['names']
+
+            responce = []
+
+            for name in names:
+                responce.append(search(name))
+
+            return responce
+
+        except BaseException as e:
+            return str(e)
+
 
 
 api.add_resource(GetCelebrations, '/GetCelebrations')
