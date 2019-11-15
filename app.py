@@ -264,8 +264,6 @@ class CheckActuality(Resource):
 
 class FindPrefered(Resource):
     def get(self):
-        cursor = cnx.cursor()
-
         try:
             parser = reqparse.RequestParser()
             parser.add_argument('names', type=list)
@@ -284,7 +282,6 @@ class FindPrefered(Resource):
             return str(e)
 
 
-
 api.add_resource(GetCelebrations, '/GetCelebrations')
 api.add_resource(GetWishlists, '/GetWishlists')
 api.add_resource(AddWishlist, '/AddWishlist')
@@ -293,6 +290,7 @@ api.add_resource(AssignCategory, '/AssignCategory')
 api.add_resource(MoveProduct, '/MoveProduct')
 api.add_resource(WillBePayed, '/WillBePayed')
 api.add_resource(CheckActuality, '/CheckActuality')
+api.add_resource(FindPrefered, '/FindPrefered')
 
 
 if __name__ == '__main__':
