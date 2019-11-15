@@ -143,6 +143,8 @@ class AssignCategory(Resource):
 api.add_resource(TestConnection, '/TestConnection')
 api.add_resource(GetWishlists, '/GetWishlists')
 api.add_resource(AddWishlist, '/AddWishlist')
+api.add_resource(AddProduct, '/AddProduct')
+api.add_resource(AssignCategory, '/AssignCategory')
 
 
 if __name__ == '__main__':
