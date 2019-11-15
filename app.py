@@ -90,6 +90,30 @@ class AddWishlist(Resource):
             return {'status': str(e)}
 
 
+class AddProduct(Resource):
+    def post(self):
+        cursor = cnx.cursor()
+
+        try:
+            parser = reqparse.RequestParser()
+            parser.add_argument('wishlist_id', type=int)
+            parser.add_argument('product_id', type=str)
+            args = parser.parse_args()
+
+            product_id = args['wishlist_id']
+            wishlist_id = args['product_id']
+
+            query = "insert into product values (?, ?);"
+            data = (product_id, wishlist_id)
+            cursor.execute(query, data)
+            cnx.commit()
+            cursor.close()
+            return {'status': 'success'}
+        except BaseException as e:
+            cursor.close()
+            return {'status': str(e)}
+
+
 api.add_resource(TestConnection, '/TestConnection')
 api.add_resource(GetWishlists, '/GetWishlists')
 api.add_resource(AddWishlist, '/AddWishlist')
