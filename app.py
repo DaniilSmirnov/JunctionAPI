@@ -244,6 +244,10 @@ class CheckActuality(Resource):
             return {'status': str(e)}
 
 
+class FindPrefered(Resource):
+    def post(self):
+        pass
+
 api.add_resource(GetCelebrations, '/GetCelebrations')
 api.add_resource(GetWishlists, '/GetWishlists')
 api.add_resource(AddWishlist, '/AddWishlist')
@@ -251,6 +255,7 @@ api.add_resource(AddProduct, '/AddProduct')
 api.add_resource(AssignCategory, '/AssignCategory')
 api.add_resource(MoveProduct, '/MoveProduct')
 api.add_resource(WillBePayed, '/WillBePayed')
+api.add_resource(CheckActuality, '/CheckActuality')
 
 
 if __name__ == '__main__':
