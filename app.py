@@ -287,6 +287,8 @@ class GetRecommendations(Resource):
                 height = screen[0]
                 width = screen[1]
 
+                responce += (search('lightning'))
+
                 if height == "568" and width == "320":
                     query = ['iphone 5', 'iphone5', 'iphone 5s', 'iphone se']
                     for item in query:
@@ -301,6 +303,11 @@ class GetRecommendations(Resource):
                     query = ['iphone X', 'iphone XS', 'iphone XR']
                     for item in query:
                         responce += (search(item))
+
+            if system == 'android':
+                responce += (search('micro usb'))
+                responce += (search('type c'))
+
             responce = list(set(responce))
             return responce
 
