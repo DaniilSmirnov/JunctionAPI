@@ -288,6 +288,8 @@ class GetRecommendations(Resource):
                 width = screen[1]
 
                 responce += (search('lightning'))
+                responce += (search('airpods'))
+                responce += (search('iphone'))
 
                 if height == "568" and width == "320":
                     query = ['iphone 5', 'iphone5', 'iphone 5s', 'iphone se']
@@ -309,7 +311,13 @@ class GetRecommendations(Resource):
                 responce += (search('type c'))
 
             responce = list(set(responce))
-            return responce
+            print(str(responce))
+            responce = str(responce)[1:len(str(responce))-1]
+            responce = responce.split(" ")
+            response = ""
+            for item in responce:
+                response += str(item)
+            return {'items': response}
 
         except BaseException as e:
             return str(e)
