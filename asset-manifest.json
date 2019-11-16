@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.css": "/JunctionAPI/static/css/main.3754646a.chunk.css",
+    "main.js": "/JunctionAPI/static/js/main.2bc5c681.chunk.js",
+    "main.js.map": "/JunctionAPI/static/js/main.2bc5c681.chunk.js.map",
+    "runtime-main.js": "/JunctionAPI/static/js/runtime-main.b9f9f29a.js",
+    "runtime-main.js.map": "/JunctionAPI/static/js/runtime-main.b9f9f29a.js.map",
+    "static/css/2.266626f9.chunk.css": "/JunctionAPI/static/css/2.266626f9.chunk.css",
+    "static/js/2.fd5cf386.chunk.js": "/JunctionAPI/static/js/2.fd5cf386.chunk.js",
+    "static/js/2.fd5cf386.chunk.js.map": "/JunctionAPI/static/js/2.fd5cf386.chunk.js.map",
+    "index.html": "/JunctionAPI/index.html",
+    "precache-manifest.1f1f46485095a1af76186aad08853195.js": "/JunctionAPI/precache-manifest.1f1f46485095a1af76186aad08853195.js",
+    "service-worker.js": "/JunctionAPI/service-worker.js",
+    "static/css/2.266626f9.chunk.css.map": "/JunctionAPI/static/css/2.266626f9.chunk.css.map",
+    "static/css/main.3754646a.chunk.css.map": "/JunctionAPI/static/css/main.3754646a.chunk.css.map"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.b9f9f29a.js",
+    "static/css/2.266626f9.chunk.css",
+    "static/js/2.fd5cf386.chunk.js",
+    "static/css/main.3754646a.chunk.css",
+    "static/js/main.2bc5c681.chunk.js"
+  ]
+}

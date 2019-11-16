@@ -1,0 +1,2 @@
+.deck{flex-direction:column}.card,.deck{display:flex;align-items:center}.card{justify-content:center;margin-top:18.5vh;width:80vw;height:56vh;border-radius:9px;box-shadow:0 -6px 11px 0 rgba(0,0,0,.5);background-image:linear-gradient(147deg,#f857a6,#ff5858)}.cardHeader{flex-direction:row;font-family:TTCommons;font-size:24px;font-weight:600;font-stretch:normal;font-style:normal;line-height:normal;letter-spacing:-.46px;color:#fff}
+/*# sourceMappingURL=main.3754646a.chunk.css.map */
