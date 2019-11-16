@@ -262,20 +262,46 @@ class CheckActuality(Resource):
             return {'status': str(e)}
 
 
-class FindPrefered(Resource):
+class GetRecommendations(Resource):
     def get(self):
         try:
             parser = reqparse.RequestParser()
-            parser.add_argument('names', type=list)
+            parser.add_argument('names', type=str)
+            parser.add_argument('system', type=str)
+            parser.add_argument('screen', type=str)
+
             args = parser.parse_args()
 
             names = args['names']
+            system = args['system']
+            screen = args['screen']
 
             responce = []
-
+            names = names.split(',')
             for name in names:
-                responce.append(search(name))
+                print(name)
+                responce += (search(name))
 
+            if system == 'ios':
+                screen = screen.split("x")
+                height = screen[0]
+                width = screen[1]
+
+                if height == "320" and width == "568":
+                    query = ['iphone 5', 'iphone5', 'iphone 5s', 'iphone se']
+                    for item in query:
+                        responce += (search(item))
+
+                if height == "375" and width == "667":
+                    query = ['iphone 6', 'iphone6', 'iphone 7', 'iphone7', 'iphone 8', 'iphone8']
+                    for item in query:
+                        responce += (search(item))
+
+                if height == "375" and width == "812":
+                    query = ['iphone X', 'iphone XS', 'iphone XR']
+                    for item in query:
+                        responce += (search(item))
+            responce = list(set(responce))
             return responce
 
         except BaseException as e:
@@ -290,7 +316,7 @@ api.add_resource(AssignCategory, '/AssignCategory')
 api.add_resource(MoveProduct, '/MoveProduct')
 api.add_resource(WillBePayed, '/WillBePayed')
 api.add_resource(CheckActuality, '/CheckActuality')
-api.add_resource(FindPrefered, '/FindPrefered')
+api.add_resource(GetRecommendations, '/GetRecommendations')
 
 
 if __name__ == '__main__':
