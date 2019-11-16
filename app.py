@@ -59,6 +59,28 @@ class GetCelebrations(Resource):
         return response
 
 
+class GetUserCategories(Resource):
+    def get(self):
+        cursor = cnx.cursor()
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('user_id', type=int)
+        args = parser.parse_args()
+
+        user_id = args['user_id']
+
+        query = "select idcategories from categories where iduser = %s;"
+        data = (user_id, )
+        cursor.execute(query, data)
+        responce = []
+        for item in cursor:
+            for value in item:
+                responce.append(str(value))
+
+        cursor.close()
+        return responce
+
+
 class GetWishlists(Resource):
     def get(self):
         cursor = cnx.cursor()
