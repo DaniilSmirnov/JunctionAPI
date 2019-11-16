@@ -345,3 +345,8 @@ api.add_resource(GetRecommendations, '/GetRecommendations')
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+# TODO: Сделать так чтобы товары не повторялись
+# TODO: Платежная система
+# TODO: Проверка остались ли у пользователя категории
+# TODO: Больше данных в рекомендации
