@@ -59,7 +59,7 @@ class GetWishlists(Resource):
 
         user_id = args['user_id']
 
-        query = "select * from wishlists where iduser = %s;"
+        query = "select * from wishlist where iduser = %s;"
         data = (user_id, )
         cursor.execute(query, data)
         wishlist = {}
@@ -77,7 +77,7 @@ class GetWishlists(Resource):
 
                 products = []
 
-                query = "select id product from products where idwishlist = %s;"
+                query = "select idproduct from products where idwishlist = %s;"
                 data = (id, )
                 cursor.execute(query, data)
                 for item in cursor:
@@ -229,31 +229,40 @@ class CheckActuality(Resource):
             parser = reqparse.RequestParser()
             parser.add_argument('user_id', type=int)
             parser.add_argument('category_id', type=int)
+            parser.add_argument('action', type=bool)
             args = parser.parse_args()
 
             user_id = args['user_id']
             category_id = args['category_id']
+            action = args['action']
 
-            query = "update categories set dislikes = dislikes + 1 where iduser = ? and idcategory = ?;"
-            data = (user_id, category_id)
-            cursor.execute(query, data)
-            cnx.commit()
+            if not action:
+                query = "update categories set dislikes = dislikes + 1 where iduser = ? and idcategory = ?;"
+                data = (user_id, category_id)
+                cursor.execute(query, data)
+                cnx.commit()
 
-            query = "select dislikes from categories where iduser = ? and idcategory = ?;"
-            data = (user_id, category_id)
-            cursor.execute(query, data)
-            for item in cursor:
-                for value in item:
-                    if int(value) >= 10:
-                        cursor2 = cnx.cursor()
-                        query = "delete idcategories from categories where idcategories = ? and iduser = ?;"
-                        data = (category_id, user_id)
-                        cursor2.execute(query, data)
-                        cnx.commit()
+                query = "select dislikes from categories where iduser = ? and idcategory = ?;"
+                data = (user_id, category_id)
+                cursor.execute(query, data)
+                for item in cursor:
+                    for value in item:
+                        if int(value) >= 20:
+                            cursor2 = cnx.cursor()
+                            query = "delete idcategories from categories where idcategories = ? and iduser = ?;"
+                            data = (category_id, user_id)
+                            cursor2.execute(query, data)
+                            cnx.commit()
 
-                        cursor.close()
-                        cursor2.close()
-                        return {'status': 'сategory removed'}
+                            cursor.close()
+                            cursor2.close()
+                            return {'status': 'сategory removed'}
+
+            if action:
+                query = "update categories set dislikes = dislikes - 1 where iduser = ? and idcategory = ?;"
+                data = (user_id, category_id)
+                cursor.execute(query, data)
+                cnx.commit()
 
             cursor.close()
             return {'status': 'success'}
