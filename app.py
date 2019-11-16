@@ -138,7 +138,7 @@ class AddWishlist(Resource):
             user_id = args['user_id']
             name = args['name']
 
-            query = "insert into wishlists values (default, ?, ?);"
+            query = "insert into wishlists values (default, %s, %s);"
             data = (user_id, name)
             cursor.execute(query, data)
             cnx.commit()
@@ -162,7 +162,7 @@ class AddProduct(Resource):
             product_id = args['wishlist_id']
             wishlist_id = args['product_id']
 
-            query = "insert into product values (?, ?, default);"
+            query = "insert into product values (%s, %s, default);"
             data = (product_id, wishlist_id)
             cursor.execute(query, data)
             cnx.commit()
@@ -186,8 +186,8 @@ class AssignCategory(Resource):
             user_id = args['user_id']
             category_id = args['category_id']
 
-            query = "insert into categories values (?, ?, default );"
-            data = (user_id, category_id)
+            query = "insert into categories values (%s, %s, default);"
+            data = (category_id, user_id)
 
             cursor.execute(query, data)
             cnx.commit()
@@ -196,6 +196,7 @@ class AssignCategory(Resource):
             return {'status': 'success'}
         except BaseException as e:
             cursor.close()
+            print(e)
             return {'status': str(e)}
 
 
@@ -214,7 +215,7 @@ class MoveProduct(Resource):
             to_id = args['to_id']
             product_id = args['product_id']
 
-            query = "update products set idwishlist = ? where idwishlist = ? and idproduct = ?;"
+            query = "update products set idwishlist = %s where idwishlist = %s and idproduct = %s;"
             data = (to_id, from_id, product_id)
             cursor.execute(query, data)
             cnx.commit()
@@ -241,7 +242,7 @@ class WillBePayed(Resource):
             choose = args['choose']
             product_id = args['product_id']
 
-            query = "update products set willbe = ? where idwishlist = ? and idproduct = ?;"
+            query = "update products set willbe = %s where idwishlist = %s and idproduct = %s;"
             data = (choose, wishlist_id, product_id)
             cursor.execute(query, data)
             cnx.commit()
@@ -269,19 +270,19 @@ class CheckActuality(Resource):
             action = args['action']
 
             if not action:
-                query = "update categories set dislikes = dislikes + 1 where iduser = ? and idcategory = ?;"
+                query = "update categories set dislikes = dislikes + 1 where iduser = %s and idcategory = %s;"
                 data = (user_id, category_id)
                 cursor.execute(query, data)
                 cnx.commit()
 
-                query = "select dislikes from categories where iduser = ? and idcategory = ?;"
+                query = "select dislikes from categories where iduser = %s and idcategory = %s;"
                 data = (user_id, category_id)
                 cursor.execute(query, data)
                 for item in cursor:
                     for value in item:
                         if int(value) >= 20:
                             cursor2 = cnx.cursor()
-                            query = "delete idcategories from categories where idcategories = ? and iduser = ?;"
+                            query = "delete idcategories from categories where idcategories = %s and iduser = %s;"
                             data = (category_id, user_id)
                             cursor2.execute(query, data)
                             cnx.commit()
@@ -291,7 +292,7 @@ class CheckActuality(Resource):
                             return {'status': 'сategory removed'}
 
             if action:
-                query = "update categories set dislikes = dislikes - 1 where iduser = ? and idcategory = ?;"
+                query = "update categories set dislikes = dislikes - 1 where iduser = %s and idcategory = %s;"
                 data = (user_id, category_id)
                 cursor.execute(query, data)
                 cnx.commit()
