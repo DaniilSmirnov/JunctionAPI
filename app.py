@@ -29,8 +29,18 @@ def search(query):
                 except ValueError:
                     continue
                 item = row[1]
-                if item.find(query) != -1:
-                    response.append(id)
+                if isinstance(query, list):
+                    query = ' '.join(query)
+                if query.find('iphone') != -1 and query.find(' ') != -1:
+                    query = query.split(" ")
+                    device = str(query[0])
+                    model = str(query[1])
+                    print(item, device, model)
+                    if item.find(device) != -1 and item.find(model) != -1:
+                        response.append(id)
+                else:
+                    if item.find(query) != -1:
+                        response.append(id)
         except UnicodeDecodeError:
             return response
 
@@ -300,12 +310,12 @@ class GetRecommendations(Resource):
                 responce += (search('airpods'))
 
                 if height == "568" and width == "320":
-                    query = ['iphone 5', 'iphone5', 'iphone 5s', 'iphone se']
+                    query = ['iphone 5', 'iphone 5s', 'iphone se']
                     for item in query:
                         responce += (search(item))
 
                 if height == "667" and width == "375":
-                    query = ['iphone 6', 'iphone6', 'iphone 7', 'iphone7', 'iphone 8', 'iphone8']
+                    query = ['iphone 6', 'iphone 7',  'iphone 8']
                     for item in query:
                         responce += (search(item))
 
@@ -328,7 +338,6 @@ class GetRecommendations(Resource):
                     responce += (search(value))
 
             responce = list(set(responce))
-            print(str(responce))
             responce = str(responce)[1:len(str(responce))-1]
             responce = responce.split(" ")
             response = ""
@@ -359,3 +368,4 @@ if __name__ == '__main__':
 # TODO: Платежная система
 # TODO: Проверка остались ли у пользователя категории
 # TODO: Больше данных в рекомендации
+# TODO: Пуши пользователю о праздниках, день рождениях друзей
