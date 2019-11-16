@@ -287,17 +287,17 @@ class GetRecommendations(Resource):
                 height = screen[0]
                 width = screen[1]
 
-                if height == "320" and width == "568":
+                if height == "568" and width == "320":
                     query = ['iphone 5', 'iphone5', 'iphone 5s', 'iphone se']
                     for item in query:
                         responce += (search(item))
 
-                if height == "375" and width == "667":
+                if height == "667" and width == "375":
                     query = ['iphone 6', 'iphone6', 'iphone 7', 'iphone7', 'iphone 8', 'iphone8']
                     for item in query:
                         responce += (search(item))
 
-                if height == "375" and width == "812":
+                if height == "812" and width == "375":
                     query = ['iphone X', 'iphone XS', 'iphone XR']
                     for item in query:
                         responce += (search(item))
