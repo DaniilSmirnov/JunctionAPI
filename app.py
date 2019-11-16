@@ -319,6 +319,14 @@ class GetRecommendations(Resource):
                 responce += (search('type c'))
                 responce += (search(system))
 
+            cursor = cnx.cursor()
+
+            query = "select name from celebrations where curdate() >= start and curdate() <= finish;"
+            cursor.execute(query)
+            for item in cursor:
+                for value in item:
+                    responce += (search(value))
+
             responce = list(set(responce))
             print(str(responce))
             responce = str(responce)[1:len(str(responce))-1]
@@ -346,6 +354,7 @@ api.add_resource(GetRecommendations, '/GetRecommendations')
 if __name__ == '__main__':
     app.run(debug=True)
 
+# TODO: Категории на основе подписок пользователей
 # TODO: Сделать так чтобы товары не повторялись
 # TODO: Платежная система
 # TODO: Проверка остались ли у пользователя категории
