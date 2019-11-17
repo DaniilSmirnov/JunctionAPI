@@ -106,24 +106,25 @@ class GetWishlists(Resource):
                         wishlist.update({'user_id': value})
                     if i == 2:
                         wishlist.update({'name': value})
+                    if i == 3:
+                        products = []
 
-                    products = []
+                        query = "select idproduct from products where idwishlist = %s;"
+                        data = (id, )
+                        try:
+                            cursor2 = cnx.cursor()
+                            cursor2.execute(query, data)
+                        except mysql.connector.errors.InternalError:
+                            return {'status': 'no wishlists'}
+                        for item2 in cursor2:
+                            for value2 in item2:
+                                products.append(value2)
 
-                    query = "select idproduct from products where idwishlist = %s;"
-                    data = (id, )
-                    try:
-                        cursor.execute(query, data)
-                    except mysql.connector.errors.InternalError:
-                        return {'status': 'no wishlists'}
-                    for item in cursor:
-                        for value in item:
-                            products.append(value)
-
-                    wishlist.update({'products': products})
+                        wishlist.update({'products': products})
 
                     i += 1
 
-                    responce.append(wishlist)
+                responce.append(wishlist)
             cursor.close()
             return responce
         except BaseException as e:
