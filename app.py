@@ -128,7 +128,8 @@ class GetWishlists(Resource):
             return responce
         except BaseException as e:
             print(e)
-            cursor.close()
+            return str(e)
+            #cursor.close()
 
 
 class AddWishlist(Resource):
