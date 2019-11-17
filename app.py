@@ -91,7 +91,7 @@ class GetWishlists(Resource):
 
             user_id = args['user_id']
 
-            query = "select * from wishlist where iduser = %s;"
+            query = "select idwishlist, list_name from wishlist where iduser = %s;"
             data = (user_id, )
             cursor.execute(query, data)
             wishlist = {}
@@ -103,10 +103,8 @@ class GetWishlists(Resource):
                         wishlist.update({'id': value})
                         id = value
                     if i == 1:
-                        wishlist.update({'user_id': value})
-                    if i == 2:
                         wishlist.update({'name': value})
-                    if i == 3:
+                    if i == 2:
                         products = []
 
                         query = "select idproduct from products where idwishlist = %s;"
