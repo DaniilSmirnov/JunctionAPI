@@ -82,46 +82,53 @@ class GetUserCategories(Resource):
 
 class GetWishlists(Resource):
     def get(self):
-        cursor = cnx.cursor()
+        try:
+            cursor = cnx.cursor()
 
-        parser = reqparse.RequestParser()
-        parser.add_argument('user_id', type=int)
-        args = parser.parse_args()
+            parser = reqparse.RequestParser()
+            parser.add_argument('user_id', type=int)
+            args = parser.parse_args()
 
-        user_id = args['user_id']
+            user_id = args['user_id']
 
-        query = "select * from wishlist where iduser = %s;"
-        data = (user_id, )
-        cursor.execute(query, data)
-        wishlist = {}
-        responce = []
-        for item in cursor:
-            i = 0
-            for value in item:
-                if i == 0:
-                    wishlist.update({'id': value})
-                    id = value
-                if i == 1:
-                    wishlist.update({'user_id': value})
-                if i == 2:
-                    wishlist.update({'name': value})
+            query = "select * from wishlist where iduser = %s;"
+            data = (user_id, )
+            cursor.execute(query, data)
+            wishlist = {}
+            responce = []
+            for item in cursor:
+                i = 0
+                for value in item:
+                    if i == 0:
+                        wishlist.update({'id': value})
+                        id = value
+                    if i == 1:
+                        wishlist.update({'user_id': value})
+                    if i == 2:
+                        wishlist.update({'name': value})
 
-                products = []
+                    products = []
 
-                query = "select idproduct from products where idwishlist = %s;"
-                data = (id, )
-                cursor.execute(query, data)
-                for item in cursor:
-                    for value in item:
-                        products.append(value)
+                    query = "select idproduct from products where idwishlist = %s;"
+                    data = (id, )
+                    try:
+                        cursor.execute(query, data)
+                    except mysql.connector.errors.InternalError:
+                        return {'status': 'no wishlists'}
+                    for item in cursor:
+                        for value in item:
+                            products.append(value)
 
-                wishlist.update({'products': products})
+                    wishlist.update({'products': products})
 
-                i += 1
+                    i += 1
 
-                responce.append(wishlist)
-        cursor.close()
-        return responce
+                    responce.append(wishlist)
+            cursor.close()
+            return responce
+        except BaseException as e:
+            print(e)
+            cursor.close()
 
 
 class AddWishlist(Resource):
@@ -137,7 +144,7 @@ class AddWishlist(Resource):
             user_id = args['user_id']
             name = args['name']
 
-            query = "insert into wishlists values (default, %s, %s);"
+            query = "insert into wishlist values (default, %s, %s);"
             data = (user_id, name)
             cursor.execute(query, data)
             cnx.commit()
@@ -145,6 +152,7 @@ class AddWishlist(Resource):
             return {'status': 'success'}
         except BaseException as e:
             cursor.close()
+            print(e)
             return {'status': str(e)}
 
 
