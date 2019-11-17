@@ -126,6 +126,9 @@ class GetWishlists(Resource):
 
                 responce.append(wishlist)
             cursor.close()
+            if isinstance(responce, list):
+                if len(responce) == 0:
+                    return {'status': 'no wishlists'}
             return responce
         except BaseException as e:
             print(e)
