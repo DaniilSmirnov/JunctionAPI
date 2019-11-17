@@ -87,43 +87,82 @@ class GetWishlists(Resource):
 
             parser = reqparse.RequestParser()
             parser.add_argument('user_id', type=int)
+            parser.add_argument('name', type=str)
             args = parser.parse_args()
 
             user_id = args['user_id']
+            name = args['name']
 
-            query = "select idwishlist, list_name from wishlist where iduser = %s;"
-            data = (user_id, )
-            cursor.execute(query, data)
-            wishlist = {}
-            responce = []
-            for item in cursor:
-                i = 0
-                for value in item:
-                    if i == 0:
-                        wishlist.update({'id': value})
-                        id = value
-                    if i == 1:
-                        wishlist.update({'name': value})
+            # Да простят меня за этот дикий костыль. Аминь.
+            if name == "common":
+                # Меня заставили...
+                query = "select idwishlist, list_name from wishlist where iduser = %s and list_name = 'common';"
+                data = (user_id,)
+                cursor.execute(query, data)
+                wishlist = {}
+                responce = []
+                for item in cursor:
+                    i = 0
+                    for value in item:
+                        if i == 0:
+                            wishlist.update({'id': value})
+                            id = value
+                        if i == 1:
+                            wishlist.update({'name': value})
+                            i += 1
+                        if i == 2:
+                            products = []
+
+                            query = "select idproduct from product where idwishlist = %s;"
+                            data = (id,)
+                            try:
+                                cursor2 = cnx.cursor()
+                                cursor2.execute(query, data)
+                            except mysql.connector.errors.InternalError:
+                                return {'status': 'no wishlists'}
+                            for item2 in cursor2:
+                                for value2 in item2:
+                                    products.append(value2)
+
+                            wishlist.update({'products': products})
                         i += 1
-                    if i == 2:
-                        products = []
 
-                        query = "select idproduct from product where idwishlist = %s;"
-                        data = (id, )
-                        try:
-                            cursor2 = cnx.cursor()
-                            cursor2.execute(query, data)
-                        except mysql.connector.errors.InternalError:
-                            return {'status': 'no wishlists'}
-                        for item2 in cursor2:
-                            for value2 in item2:
-                                products.append(value2)
+                    responce.append(wishlist)
+                cursor.close()
+            else:
+                query = "select idwishlist, list_name from wishlist where iduser = %s;"
+                data = (user_id, )
+                cursor.execute(query, data)
+                wishlist = {}
+                responce = []
+                for item in cursor:
+                    i = 0
+                    for value in item:
+                        if i == 0:
+                            wishlist.update({'id': value})
+                            id = value
+                        if i == 1:
+                            wishlist.update({'name': value})
+                            i += 1
+                        if i == 2:
+                            products = []
 
-                        wishlist.update({'products': products})
-                    i += 1
+                            query = "select idproduct from product where idwishlist = %s;"
+                            data = (id, )
+                            try:
+                                cursor2 = cnx.cursor()
+                                cursor2.execute(query, data)
+                            except mysql.connector.errors.InternalError:
+                                return {'status': 'no wishlists'}
+                            for item2 in cursor2:
+                                for value2 in item2:
+                                    products.append(value2)
 
-                responce.append(wishlist)
-            cursor.close()
+                            wishlist.update({'products': products})
+                        i += 1
+
+                    responce.append(wishlist)
+                cursor.close()
             if isinstance(responce, list):
                 if len(responce) == 0:
                     return {'status': 'no wishlists'}
