@@ -102,7 +102,6 @@ class GetWishlists(Resource):
                     if i == 0:
                         wishlist.update({'id': value})
                         id = value
-                        i += 1
                     if i == 1:
                         wishlist.update({'name': value})
                         i += 1
@@ -120,8 +119,7 @@ class GetWishlists(Resource):
                             for value2 in item2:
                                 products.append(value2)
 
-                    wishlist.update({'products': products})
-
+                        wishlist.update({'products': products})
                     i += 1
 
                 responce.append(wishlist)
