@@ -102,12 +102,14 @@ class GetWishlists(Resource):
                     if i == 0:
                         wishlist.update({'id': value})
                         id = value
+                        i += 1
                     if i == 1:
                         wishlist.update({'name': value})
+                        i += 1
                     if i == 2:
                         products = []
 
-                        query = "select idproduct from products where idwishlist = %s;"
+                        query = "select idproduct from product where idwishlist = %s;"
                         data = (id, )
                         try:
                             cursor2 = cnx.cursor()
@@ -118,7 +120,7 @@ class GetWishlists(Resource):
                             for value2 in item2:
                                 products.append(value2)
 
-                        wishlist.update({'products': products})
+                    wishlist.update({'products': products})
 
                     i += 1
 
@@ -221,7 +223,7 @@ class MoveProduct(Resource):
             to_id = args['to_id']
             product_id = args['product_id']
 
-            query = "update products set idwishlist = %s where idwishlist = %s and idproduct = %s;"
+            query = "update product set idwishlist = %s where idwishlist = %s and idproduct = %s;"
             data = (to_id, from_id, product_id)
             cursor.execute(query, data)
             cnx.commit()
@@ -248,7 +250,7 @@ class WillBePayed(Resource):
             choose = args['choose']
             product_id = args['product_id']
 
-            query = "update products set willbe = %s where idwishlist = %s and idproduct = %s;"
+            query = "update product set willbe = %s where idwishlist = %s and idproduct = %s;"
             data = (choose, wishlist_id, product_id)
             cursor.execute(query, data)
             cnx.commit()
