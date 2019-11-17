@@ -212,13 +212,14 @@ class AddProduct(Resource):
             wishlist_id = args['product_id']
 
             query = "insert into product values (%s, %s, default);"
-            data = (product_id, wishlist_id)
+            data = (wishlist_id, product_id)
             cursor.execute(query, data)
             cnx.commit()
             cursor.close()
             return {'status': 'success'}
         except BaseException as e:
             cursor.close()
+            print(e)
             return {'status': str(e)}
 
 
