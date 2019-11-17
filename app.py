@@ -35,7 +35,6 @@ def search(query):
                     query = query.split(" ")
                     device = str(query[0])
                     model = str(query[1])
-                    print(item, device, model)
                     if item.find(device) != -1 and item.find(model) != -1:
                         response.append(id)
                 else:
@@ -196,7 +195,6 @@ class AssignCategory(Resource):
             return {'status': 'success'}
         except BaseException as e:
             cursor.close()
-            print(e)
             return {'status': str(e)}
 
 
@@ -321,7 +319,6 @@ class GetRecommendations(Resource):
             responce = []
             names = names.split(',')
             for name in names:
-                print(name)
                 responce += (search(name))
 
             if system == 'ios':
@@ -336,16 +333,22 @@ class GetRecommendations(Resource):
                     query = ['iphone 5', 'iphone 5s', 'iphone se']
                     for item in query:
                         responce += (search(item))
+                else:
+                    responce += (search("iphone"))
 
                 if height == "667" and width == "375":
                     query = ['iphone 6', 'iphone 7',  'iphone 8']
                     for item in query:
                         responce += (search(item))
+                else:
+                    responce += (search("iphone"))
 
                 if height == "812" and width == "375":
                     query = ['iphone X', 'iphone XS', 'iphone XR']
                     for item in query:
                         responce += (search(item))
+                else:
+                    responce += (search("iphone"))
 
             else:
                 responce += (search('micro usb'))
@@ -392,3 +395,4 @@ if __name__ == '__main__':
 # TODO: Проверка остались ли у пользователя категории
 # TODO: Больше данных в рекомендации
 # TODO: Пуши пользователю о праздниках, день рождениях друзей
+# TODO: Похожие товары по вишлисту
